@@ -158,6 +158,11 @@ MonoBehaviour:
   texBacha: {fileID: 2800000, guid: 8a70f0436ff3d904e9783fbe041734ab, type: 3}
   texEspejo: {fileID: 2800000, guid: 8f62849a96673c04e855d67f94c0c16d, type: 3}
   texDucha: {fileID: 2800000, guid: 8c66fa0d978df5948b8a1efb64f23dd2, type: 3}
+  texHeladera: {fileID: 2800000, guid: 6d5c6323a02f1cb46a6c2e758a4872ed, type: 3}
+  texCocina: {fileID: 2800000, guid: 55d85f3b0bced7745aadb4ecb4532aef, type: 3}
+  texBachaCocina: {fileID: 2800000, guid: dfb8df7ddc782844cbc1ab590f55f8a3, type: 3}
+  texBajoMesada: {fileID: 2800000, guid: a0450afd90e9b564abb7278101fe224b, type: 3}
+  texAlacena: {fileID: 2800000, guid: 4ff10dbb4d7fb994eafc3c0dd7469823, type: 3}
 --- !u!114 &1068152875
 MonoBehaviour:
   m_ObjectHideFlags: 0
