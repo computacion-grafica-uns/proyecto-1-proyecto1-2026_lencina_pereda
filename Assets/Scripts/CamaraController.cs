@@ -3,123 +3,172 @@ using UnityEngine;
 public class CamaraController : MonoBehaviour
 {
     public enum ModoCamara { OrbitalAuto, PrimeraPersona, OrbitalPasos }
-    public ModoCamara modoActual = ModoCamara.OrbitalPasos; // Arranca estática
+    public ModoCamara modoActual = ModoCamara.OrbitalPasos;
 
     private ViewMatrix viewMath;
-    private ModelMatrix modelMath; // Usamos su implementación manual
     private SceneManager sceneManager;
 
-    [Header("Posición de la Cámara")]
+    [Header("Parámetros de Vista")]
     public Vector3 eye;
     public Vector3 target = Vector3.zero;
-    
-    private float yaw = 0f;
-    private float pitch = 15f; 
-    private float distancia = 25f;
 
-    void Start() {
+    private float yaw = 0f;
+    private float pitch = 15f;
+    private float distancia = 20f;
+
+    // Memoria para el Reset (Tecla R)
+    private Vector3 posInicialFPP;
+    private float yawInicial, pitchInicial, distInicial;
+
+    public void ConfigurarCamara(Vector3 centro, float dist, float inclinacion, Vector3 fppInicio)
+    {
+        this.target = centro;
+        this.distancia = dist;
+        this.pitch = inclinacion;
+        this.posInicialFPP = fppInicio;
+
+        // Parámetros originales de "fábrica"
+        this.yawInicial = 0f;
+        this.pitchInicial = inclinacion;
+        this.distInicial = dist;
+
+        if (modoActual == ModoCamara.PrimeraPersona) eye = posInicialFPP;
+        else CalcularPosicionOrbital();
+
+        ActualizarTodo();
+    }
+
+    void Start()
+    {
         viewMath = GetComponent<ViewMatrix>();
-        modelMath = GetComponent<ModelMatrix>(); //
         sceneManager = Object.FindFirstObjectByType<SceneManager>();
-        
-        // Setup básico para el Viewport de Unity
+
         Camera cam = GetComponent<Camera>();
         if (cam == null) cam = gameObject.AddComponent<Camera>();
         cam.backgroundColor = Color.black;
         cam.clearFlags = CameraClearFlags.SolidColor;
-
-        // FORZAMOS POSICIÓN ESTÁTICA INICIAL (Actividad 5)
-        modoActual = ModoCamara.OrbitalPasos;
-        distancia = 25f;
-        yaw = 0f;
-        pitch = 15f;
-        
-        CalcularPosicionOrbital();
-        ActualizarTodo();
     }
 
-    void Update() {
-        // Tecla C: Cambia el modo
-        if (Input.GetKeyDown(KeyCode.C)) {
-            modoActual = (ModoCamara)(((int)modoActual + 1) % 3);
-            
-            // Si pasamos a Primera Persona, reseteamos la vista para no mirar al vacío
-            if (modoActual == ModoCamara.PrimeraPersona) {
-                eye = new Vector3(0, 5, -20); // Posición similar a la orbital
-                yaw = 0f; pitch = 0f; // Mirando al frente (eje Z positivo)
+    void Update()
+    {
+        // TECLA C: Cambia el modo
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (modoActual == ModoCamara.OrbitalAuto) modoActual = ModoCamara.PrimeraPersona;
+            else if (modoActual == ModoCamara.PrimeraPersona) modoActual = ModoCamara.OrbitalPasos;
+            else modoActual = ModoCamara.OrbitalAuto;
+
+            if (modoActual == ModoCamara.PrimeraPersona)
+            {
+                eye = posInicialFPP;
+                yaw = 0f;
+                pitch = 0f;
+            }
+            else
+            {
+                CalcularPosicionOrbital();
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) {
-            distancia = 25f; yaw = 0f; pitch = 15f;
-            target = Vector3.zero;
-            CalcularPosicionOrbital();
+        // --- TECLA R: RESETEA SEGÚN EL MODO (SIN CAMBIAR DE MODO) ---
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (modoActual == ModoCamara.PrimeraPersona)
+            {
+                // RESET INTERNO: Te devuelve al living y resetea la mirada
+                eye = posInicialFPP;
+                yaw = 0f;
+                pitch = 0f;
+                target = eye + new Vector3(0, 0, 1); // Mira hacia adelante
+            }
+            else
+            {
+                // RESET EXTERNO: Devuelve a la vista aérea original
+                yaw = yawInicial;
+                pitch = pitchInicial;
+                distancia = distInicial;
+                CalcularPosicionOrbital(); // SOLO se calcula si es orbital
+            }
         }
 
-        switch (modoActual) {
-            case ModoCamara.OrbitalAuto: ControlOrbitalAuto(); break;
-            case ModoCamara.PrimeraPersona: ControlPrimeraPersona(); break;
-            case ModoCamara.OrbitalPasos: ControlOrbitalPasos(); break;
-        }
+        if (modoActual == ModoCamara.PrimeraPersona) ControlFPP();
+        else ControlOrbital();
 
         ActualizarTodo();
     }
 
-    void ControlOrbitalAuto() {
-        yaw += 25f * Time.deltaTime;
+    void ControlOrbital()
+    {
+        // --- ZOOM GLOBAL (Auto y Pasos) ---
+        if (Input.GetKey(KeyCode.UpArrow)) distancia -= 20f * Time.deltaTime;
+        if (Input.GetKey(KeyCode.DownArrow)) distancia += 20f * Time.deltaTime;
+        distancia = Mathf.Clamp(distancia, 4f, 45f);
+
+        if (modoActual == ModoCamara.OrbitalAuto)
+        {
+            yaw += 20f * Time.deltaTime;
+        }
+        else
+        {
+            // Manual
+            yaw += Input.GetAxis("Mouse X") * 5f;
+            pitch -= Input.GetAxis("Mouse Y") * 5f;
+            if (Input.GetKey(KeyCode.RightArrow)) yaw += 60f * Time.deltaTime;
+            if (Input.GetKey(KeyCode.LeftArrow)) yaw -= 60f * Time.deltaTime;
+        }
+
+        pitch = Mathf.Clamp(pitch, -89f, 89f);
         CalcularPosicionOrbital();
     }
 
-    void ControlOrbitalPasos() {
-        if (Input.GetKeyDown(KeyCode.RightArrow)) yaw += 15f;
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) yaw -= 15f;
-        if (Input.GetKey(KeyCode.UpArrow)) distancia -= 10f * Time.deltaTime;
-        if (Input.GetKey(KeyCode.DownArrow)) distancia += 10f * Time.deltaTime;
-        distancia = Mathf.Clamp(distancia, 5f, 100f);
-        CalcularPosicionOrbital();
-    }
+    void ControlFPP()
+    {
+        yaw += Input.GetAxis("Mouse X") * 3f;
+        pitch -= Input.GetAxis("Mouse Y") * 3f;
+        pitch = Mathf.Clamp(pitch, -89f, 89f);
 
-    void ControlPrimeraPersona() {
-        // Sensibilidad ajustada para que no gire de golpe
-        yaw += Input.GetAxis("Mouse X") * 2f;
-        pitch -= Input.GetAxis("Mouse Y") * 2f;
-        pitch = Mathf.Clamp(pitch, -80f, 80f);
-
-        // Vector director basado en yaw y pitch
         Vector3 dir = new Vector3(
             Mathf.Cos(pitch * Mathf.Deg2Rad) * Mathf.Sin(yaw * Mathf.Deg2Rad),
             Mathf.Sin(pitch * Mathf.Deg2Rad),
             Mathf.Cos(pitch * Mathf.Deg2Rad) * Mathf.Cos(yaw * Mathf.Deg2Rad)
         ).normalized;
 
-        // Movimiento WASD
-        eye += dir * (Input.GetAxis("Vertical") * 8f * Time.deltaTime);
-        eye += Vector3.Cross(Vector3.up, dir).normalized * -(Input.GetAxis("Horizontal") * 8f * Time.deltaTime);
-        
-        target = eye + dir; // El target siempre está "adelante" del ojo
+        float speed = 6f;
+        eye += dir * (Input.GetAxis("Vertical") * speed * Time.deltaTime);
+        eye += Vector3.Cross(Vector3.up, dir).normalized * -(Input.GetAxis("Horizontal") * speed * Time.deltaTime);
+
+        target = eye + dir;
     }
 
-    void CalcularPosicionOrbital() {
+    void CalcularPosicionOrbital()
+    {
         float rY = yaw * Mathf.Deg2Rad, rP = pitch * Mathf.Deg2Rad;
         eye.x = target.x + distancia * Mathf.Cos(rP) * Mathf.Sin(rY);
         eye.y = target.y + distancia * Mathf.Sin(rP);
         eye.z = target.z - distancia * Mathf.Cos(rP) * Mathf.Cos(rY);
     }
 
-    void ActualizarTodo() {
-        if (sceneManager == null || viewMath == null || modelMath == null) return;
-        
-        // 1. Matriz de Vista (Manual)
+    void ActualizarTodo()
+    {
+        if (sceneManager == null || viewMath == null) return;
         Matrix4x4 vMat = viewMath.CreateViewMatrix(eye, target, Vector3.up);
-        
-        // 2. Inyectamos la matriz en los objetos del SceneManager
-        foreach (GameObject obj in sceneManager.objetosEscena) {
-            if (obj != null)
-                obj.GetComponent<Renderer>().material.SetMatrix("_ViewMatrix", vMat);
-        }
 
-        // 3. Matriz de Modelo para la cámara (Consistencia interna)
-        // Usamos su script para que el objeto Camaras en Unity sepa su posición
-        modelMath.CreateModelMatrix(eye, new Vector3(pitch, yaw, 0), Vector3.one);
+        foreach (GameObject obj in sceneManager.objetosEscena)
+        {
+            if (obj != null)
+            {
+                Renderer r = obj.GetComponent<Renderer>();
+                ModelMatrix mm = obj.GetComponent<ModelMatrix>();
+                if (r != null)
+                {
+                    r.material.SetMatrix("_ViewMatrix", vMat);
+                    if (mm != null)
+                    {
+                        Matrix4x4 mMat = mm.CreateModelMatrix(obj.transform.position, obj.transform.eulerAngles * Mathf.Deg2Rad, Vector3.one);
+                        r.material.SetMatrix("_ModelMatrix", mMat);
+                    }
+                }
+            }
+        }
     }
 }
