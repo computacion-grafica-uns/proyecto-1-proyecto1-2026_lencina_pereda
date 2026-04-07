@@ -154,6 +154,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objetosEscena: []
+  texInodoro: {fileID: 2800000, guid: 9a8e9f2e3e00e184ebca3ea7d9b53d80, type: 3}
+  texBacha: {fileID: 2800000, guid: 8a70f0436ff3d904e9783fbe041734ab, type: 3}
+  texEspejo: {fileID: 2800000, guid: 8f62849a96673c04e855d67f94c0c16d, type: 3}
+  texDucha: {fileID: 2800000, guid: 8c66fa0d978df5948b8a1efb64f23dd2, type: 3}
 --- !u!114 &1068152875
 MonoBehaviour:
   m_ObjectHideFlags: 0
