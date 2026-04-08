@@ -18,6 +18,17 @@ public class SceneManager : MonoBehaviour
 	public Texture2D texBachaCocina;
 	public Texture2D texBajoMesada;
 	public Texture2D texAlacena;
+	
+	[Header("Texturas de Habitación")]
+	public Texture2D texCama;
+	
+	[Header("Texturas de Muebles Adicionales")]
+	public Texture2D texPlacard;
+	public Texture2D texMesita;
+	
+	[Header("Texturas de Comedor")]
+	public Texture2D texMesa;
+	public Texture2D texSilla;
 
     private GameObject _techo;
     private GameObject _paredes;
@@ -94,8 +105,76 @@ public class SceneManager : MonoBehaviour
 		GameObject upperCab = BuildFromPath("Alacena", cabinetsPath + "UpperCabinet/UpperCabinet.obj", Color.white, texAlacena);
 		if (upperCab != null) AplicarTransformacion(upperCab, new Vector3(-3f, 1.5f, 0.1f), new Vector3(0, rot90, 0), Vector3.one);
 		
+		// --- 4. SECTOR HABITACIÓN ---
+		string bedroomPath = Application.dataPath + "/Models/bed/";
+
+		GameObject bed = BuildFromPath("Cama", bedroomPath + "bed.obj", Color.white, texCama);
+		if (bed != null)
+		{
+			AplicarTransformacion(bed, new Vector3(-0.5f, 0.8f, 1.94f), new Vector3(0, 90f * Mathf.Deg2Rad, 0), Vector3.one);
+		}		
+		
+		// --- 5. MUEBLES ADICIONALES (Distribución Optimizada) ---
+		string furniturePath = Application.dataPath + "/Models/muebles/";
+
+		// Placard (HalfWardrobe): Contra la pared de la puerta de entrada, al lado de la cocina
+		GameObject wardrobe = BuildFromPath("Placard", furniturePath + "HalfWardrobe/HalfWardrobe.obj", Color.white, texPlacard);
+		if (wardrobe != null)
+		{
+			AplicarTransformacion(wardrobe, new Vector3(0.5f, 0.8f, -2f), new Vector3(0, -90f * Mathf.Deg2Rad, 0), Vector3.one);
+		}
+
+		// Mueble pequeño (littleOne): A los pies de la cama, contra la pared del baño
+		GameObject tiny = BuildFromPath("Mesita", furniturePath + "littleOne/littleOne.obj", Color.white, texMesita);
+		if (tiny != null)
+		{
+			AplicarTransformacion(tiny, new Vector3(1.1f, 0.5f, 2f), new Vector3(0, -90f * Mathf.Deg2Rad, 0), Vector3.one);
+		}
+		
+		// --- 6. SECTOR COMEDOR ---
+		string tablePath = Application.dataPath + "/Models/table/";
+		string chairPath = Application.dataPath + "/Models/chair1/";
+
+		// --- SECTOR COMEDOR ---
+		Vector3 tablePos = new Vector3(-1f, 0.85f, -0.5f); 
+
+		// Carga de la mesa
+		GameObject diningTable = BuildFromPath("Mesa", tablePath + "table.obj", Color.white, texMesa);
+		if (diningTable != null)
+		{
+			AplicarTransformacion(diningTable, tablePos, Vector3.zero, Vector3.one);
+		}
+
+		// Offset de 1.0f (ideal para el modelo 'table.obj')
+		float chairOffset = 1.0f; 
+
+		// Posiciones calculadas alrededor de tablePos
+		Vector3[] relativeChairPos = new Vector3[] {
+			new Vector3(tablePos.x, tablePos.y, tablePos.z + chairOffset), // Norte
+			new Vector3(tablePos.x, tablePos.y, tablePos.z - chairOffset), // Sur
+			new Vector3(tablePos.x + chairOffset, tablePos.y, tablePos.z), // Este
+			new Vector3(tablePos.x - chairOffset, tablePos.y, tablePos.z)  // Oeste
+		};
+
+		// Rotaciones para que miren al centro (ajustadas para 'chair1.obj')
+		float[] chairRotRads = new float[] {
+			180f * Mathf.Deg2Rad, // Silla Norte mira al Sur (-Z)
+			0f,                   // Silla Sur mira al Norte (+Z)
+			-90f * Mathf.Deg2Rad, // Silla Este mira al Oeste (-X)
+			90f * Mathf.Deg2Rad   // Silla Oeste mira al Este (+X)
+		};
+
+		for (int i = 0; i < 4; i++) {
+			GameObject chair = BuildFromPath("Silla_" + i, chairPath + "chair1.obj", Color.white, texSilla);
+			if (chair != null) {
+				// Asegúrate de que esta línea use exactamente 'relativeChairPos[i]'
+				AplicarTransformacion(chair, relativeChairPos[i], new Vector3(0, chairRotRads[i], 0), Vector3.one);
+			}
+		}
+		
         CamaraController cam = Object.FindFirstObjectByType<CamaraController>();
         if (cam != null) cam.ConfigurarCamara(new Vector3(0, 1.25f, 0), 12f, 55f, new Vector3(0, 1.5f, 0));
+		
     }
 
     GameObject BuildFromPath(string id, string path, Color col, Texture2D tex)
