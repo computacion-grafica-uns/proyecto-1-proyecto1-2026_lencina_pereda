@@ -158,10 +158,10 @@ public class SceneManager : MonoBehaviour
 
 		// Rotaciones para que miren al centro (ajustadas para 'chair1.obj')
 		float[] chairRotRads = new float[] {
-			180f * Mathf.Deg2Rad, // Silla Norte mira al Sur (-Z)
-			0f,                   // Silla Sur mira al Norte (+Z)
-			-90f * Mathf.Deg2Rad, // Silla Este mira al Oeste (-X)
-			90f * Mathf.Deg2Rad   // Silla Oeste mira al Este (+X)
+			-90f * Mathf.Deg2Rad,  // Silla Norte
+			90f * Mathf.Deg2Rad, // Silla Sur
+			180f * Mathf.Deg2Rad, // Silla Este
+			0f                    // Silla Oeste
 		};
 
 		for (int i = 0; i < 4; i++) {
