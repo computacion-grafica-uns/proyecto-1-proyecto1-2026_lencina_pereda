@@ -111,8 +111,8 @@ public class CamaraController : MonoBehaviour
         else
         {
             // Manual
-            yaw += Input.GetAxis("Mouse X") * 5f;
-            pitch -= Input.GetAxis("Mouse Y") * 5f;
+            yaw -= Input.GetAxis("Mouse X") * 5f; 
+            pitch += Input.GetAxis("Mouse Y") * 5f; 
             if (Input.GetKey(KeyCode.RightArrow)) yaw += 60f * Time.deltaTime;
             if (Input.GetKey(KeyCode.LeftArrow)) yaw -= 60f * Time.deltaTime;
         }
@@ -123,8 +123,9 @@ public class CamaraController : MonoBehaviour
 
     void ControlFPP()
     {
+        // 1. Mirada natural (Mouse derecha = Mira derecha / Mouse arriba = Mira arriba)
         yaw += Input.GetAxis("Mouse X") * 3f;
-        pitch -= Input.GetAxis("Mouse Y") * 3f;
+        pitch += Input.GetAxis("Mouse Y") * 3f; // Cambiado de -= a +=
         pitch = Mathf.Clamp(pitch, -89f, 89f);
 
         Vector3 dir = new Vector3(
@@ -134,8 +135,12 @@ public class CamaraController : MonoBehaviour
         ).normalized;
 
         float speed = 6f;
+        // Movimiento adelante/atrás
         eye += dir * (Input.GetAxis("Vertical") * speed * Time.deltaTime);
-        eye += Vector3.Cross(Vector3.up, dir).normalized * -(Input.GetAxis("Horizontal") * speed * Time.deltaTime);
+
+        // 2. CORRECCIÓN LATERAL: Quitamos el "-" para que D sea Derecha y A sea Izquierda
+        // En Unity, el producto cruzado (Up x Dir) nos da el vector hacia la derecha
+        eye += Vector3.Cross(Vector3.up, dir).normalized * (Input.GetAxis("Horizontal") * speed * Time.deltaTime);
 
         target = eye + dir;
     }
@@ -151,6 +156,18 @@ public class CamaraController : MonoBehaviour
     void ActualizarTodo()
     {
         if (sceneManager == null || viewMath == null) return;
+
+        // Obtenemos el script de proyección
+        ProjectionMatrix projMath = GetComponent<ProjectionMatrix>();
+
+        if (projMath == null) projMath = gameObject.AddComponent<ProjectionMatrix>();
+
+        // 1. Calculamos la matriz manual (FOV 90, Aspect 16/9, Near 0.1, Far 1000) [cite: 23, 24, 25]
+        Matrix4x4 pMatRaw = projMath.CalculatePerspectiveProjectionMatrix(90f, 16f / 9f, 0.1f, 1000f);
+
+       // 2. Convertimos para la GPU (Crucial para DirectX/OpenGL) 
+        Matrix4x4 pMatGPU = GL.GetGPUProjectionMatrix(pMatRaw, true);
+
         Matrix4x4 vMat = viewMath.CreateViewMatrix(eye, target, Vector3.up);
 
         foreach (GameObject obj in sceneManager.objetosEscena)
@@ -158,9 +175,11 @@ public class CamaraController : MonoBehaviour
             if (obj != null)
             {
                 Renderer r = obj.GetComponent<Renderer>();
+
                 ModelMatrix mm = obj.GetComponent<ModelMatrix>();
                 if (r != null)
                 {
+                    r.material.SetMatrix("_ProjectionMatrix", pMatGPU);
                     r.material.SetMatrix("_ViewMatrix", vMat);
                     if (mm != null)
                     {

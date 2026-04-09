@@ -25,13 +25,15 @@ Shader "Custom/ShaderUnversal"
 
             uniform float4x4 _ModelMatrix;
             uniform float4x4 _ViewMatrix; 
+            uniform float4x4 _ProjectionMatrix; 
             sampler2D _MainTex;
             float _UseTexture;
 
             v2f vert (appdata v) {
                 v2f o;
-                float4x4 mvp = mul(mul(UNITY_MATRIX_P, _ViewMatrix), _ModelMatrix);
-                o.vertex = mul(mvp, v.vertex); 
+                float4 worldPos = mul(_ModelMatrix, v.vertex);
+                 float4 viewPos = mul(_ViewMatrix, worldPos);
+                o.vertex = mul(_ProjectionMatrix, viewPos);
                 o.uv = v.uv;
                 o.color = v.color;
                 return o;
