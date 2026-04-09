@@ -183,7 +183,7 @@ public class CamaraController : MonoBehaviour
                     r.material.SetMatrix("_ViewMatrix", vMat);
                     if (mm != null)
                     {
-                        Matrix4x4 mMat = mm.CreateModelMatrix(obj.transform.position, obj.transform.eulerAngles * Mathf.Deg2Rad, Vector3.one);
+                        Matrix4x4 mMat = mm.CreateModelMatrix(obj.transform.position, obj.transform.eulerAngles * Mathf.Deg2Rad, obj.transform.localScale);
                         r.material.SetMatrix("_ModelMatrix", mMat);
                     }
                 }

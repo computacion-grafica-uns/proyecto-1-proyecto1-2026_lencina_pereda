@@ -142,7 +142,8 @@ public class SceneManager : MonoBehaviour
 		GameObject diningTable = BuildFromPath("Mesa", tablePath + "table.obj", Color.white, texMesa);
 		if (diningTable != null)
 		{
-			AplicarTransformacion(diningTable, tablePos, Vector3.zero, Vector3.one);
+			Vector3 escalaMesa = new Vector3(0.8f, 0.8f, 0.8f);
+            AplicarTransformacion(diningTable, tablePos, Vector3.zero, escalaMesa);
 		}
 
 		// Offset de 1.0f (ideal para el modelo 'table.obj')
@@ -205,6 +206,7 @@ public class SceneManager : MonoBehaviour
     {
         obj.transform.position = p;
         obj.transform.eulerAngles = r * Mathf.Rad2Deg;
+        obj.transform.localScale = s;
         ModelMatrix mm = obj.GetComponent<ModelMatrix>();
         if (mm != null)
         {
