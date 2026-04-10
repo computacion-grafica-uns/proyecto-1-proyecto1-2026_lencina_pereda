@@ -113,8 +113,8 @@ public class CamaraController : MonoBehaviour
             // Manual
             yaw -= Input.GetAxis("Mouse X") * 5f; 
             pitch += Input.GetAxis("Mouse Y") * 5f; 
-            if (Input.GetKey(KeyCode.RightArrow)) yaw += 60f * Time.deltaTime;
-            if (Input.GetKey(KeyCode.LeftArrow)) yaw -= 60f * Time.deltaTime;
+            if (Input.GetKey(KeyCode.LeftArrow)) yaw += 60f * Time.deltaTime;
+            if (Input.GetKey(KeyCode.RightArrow)) yaw -= 60f * Time.deltaTime;
         }
 
         pitch = Mathf.Clamp(pitch, -89f, 89f);
@@ -140,7 +140,7 @@ public class CamaraController : MonoBehaviour
 
         // 2. CORRECCIÓN LATERAL: Quitamos el "-" para que D sea Derecha y A sea Izquierda
         // En Unity, el producto cruzado (Up x Dir) nos da el vector hacia la derecha
-        eye += Vector3.Cross(Vector3.up, dir).normalized * (Input.GetAxis("Horizontal") * speed * Time.deltaTime);
+        eye -= Vector3.Cross(Vector3.up, dir).normalized * (Input.GetAxis("Horizontal") * speed * Time.deltaTime);
 
         target = eye + dir;
     }
