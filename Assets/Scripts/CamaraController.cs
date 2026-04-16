@@ -111,7 +111,7 @@ public class CamaraController : MonoBehaviour
         else
         {
             // Manual
-            yaw -= Input.GetAxis("Mouse X") * 5f; 
+            yaw += Input.GetAxis("Mouse X") * 5f; 
             pitch += Input.GetAxis("Mouse Y") * 5f; 
             if (Input.GetKey(KeyCode.LeftArrow)) yaw += 60f * Time.deltaTime;
             if (Input.GetKey(KeyCode.RightArrow)) yaw -= 60f * Time.deltaTime;
@@ -124,7 +124,7 @@ public class CamaraController : MonoBehaviour
     void ControlFPP()
     {
         // 1. Mirada natural (Mouse derecha = Mira derecha / Mouse arriba = Mira arriba)
-        yaw += Input.GetAxis("Mouse X") * 3f;
+        yaw -= Input.GetAxis("Mouse X") * 3f;
         pitch += Input.GetAxis("Mouse Y") * 3f; // Cambiado de -= a +=
         pitch = Mathf.Clamp(pitch, -89f, 89f);
 
