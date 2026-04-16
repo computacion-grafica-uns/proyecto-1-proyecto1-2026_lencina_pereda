@@ -111,7 +111,7 @@ public class CamaraController : MonoBehaviour
         else
         {
             // Manual
-            yaw += Input.GetAxis("Mouse X") * 5f; 
+            yaw -= Input.GetAxis("Mouse X") * 5f; 
             pitch += Input.GetAxis("Mouse Y") * 5f; 
             if (Input.GetKey(KeyCode.LeftArrow)) yaw += 60f * Time.deltaTime;
             if (Input.GetKey(KeyCode.RightArrow)) yaw -= 60f * Time.deltaTime;
