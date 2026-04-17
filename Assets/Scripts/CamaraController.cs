@@ -122,29 +122,47 @@ public class CamaraController : MonoBehaviour
     }
 
     void ControlFPP()
-    {
-        // 1. Mirada natural (Mouse derecha = Mira derecha / Mouse arriba = Mira arriba)
-        yaw -= Input.GetAxis("Mouse X") * 3f;
-        pitch += Input.GetAxis("Mouse Y") * 3f; // Cambiado de -= a +=
-        pitch = Mathf.Clamp(pitch, -89f, 89f);
+	{
+		float speed = 6f;
+		float rotationSpeed = 60f; // Sensibilidad de rotación para A y D
 
-        Vector3 dir = new Vector3(
-            Mathf.Cos(pitch * Mathf.Deg2Rad) * Mathf.Sin(yaw * Mathf.Deg2Rad),
-            Mathf.Sin(pitch * Mathf.Deg2Rad),
-            Mathf.Cos(pitch * Mathf.Deg2Rad) * Mathf.Cos(yaw * Mathf.Deg2Rad)
-        ).normalized;
+		// 1. Mirada con Mouse (Se mantiene igual)
+		yaw -= Input.GetAxis("Mouse X") * 3f;
+		pitch += Input.GetAxis("Mouse Y") * 3f;
+		pitch = Mathf.Clamp(pitch, -89f, 89f);
 
-        float speed = 6f;
-        // Movimiento adelante/atrás
-        eye += dir * (Input.GetAxis("Vertical") * speed * Time.deltaTime);
+		// 2. FUNCIONALIDAD WASD (Nuevas)
+		// A y D: Rotación horizontal (Gira la "cabeza" sin mover el cuerpo)
+		if (Input.GetKey(KeyCode.D)) yaw -= rotationSpeed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.A)) yaw += rotationSpeed * Time.deltaTime;
 
-        // 2. CORRECCIÓN LATERAL: Quitamos el "-" para que D sea Derecha y A sea Izquierda
-        // En Unity, el producto cruzado (Up x Dir) nos da el vector hacia la derecha
-        eye -= Vector3.Cross(Vector3.up, dir).normalized * (Input.GetAxis("Horizontal") * speed * Time.deltaTime);
+		// Recalculamos el vector 'dir' con el yaw actualizado (por mouse o por A/D)
+		Vector3 dir = new Vector3(
+        Mathf.Cos(pitch * Mathf.Deg2Rad) * Mathf.Sin(yaw * Mathf.Deg2Rad),
+        Mathf.Sin(pitch * Mathf.Deg2Rad),
+        Mathf.Cos(pitch * Mathf.Deg2Rad) * Mathf.Cos(yaw * Mathf.Deg2Rad)
+		).normalized;
 
-        target = eye + dir;
-    }
+		// W y S: Movimiento Vertical (Ascensor)
+		if (Input.GetKey(KeyCode.W)) eye += Vector3.up * speed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.S)) eye -= Vector3.up * speed * Time.deltaTime;
 
+
+		// 3. MECANISMO DE FLECHAS (Original)
+		// Flechas Arriba/Abajo: Mover adelante y atrás siguiendo la mirada
+		if (Input.GetKey(KeyCode.UpArrow)) eye += dir * speed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.DownArrow)) eye -= dir * speed * Time.deltaTime;
+
+		// Flechas Derecha/Izquierda: Desplazamiento lateral (Strafe)
+		Vector3 sideDir = Vector3.Cross(Vector3.up, dir).normalized;
+		if (Input.GetKey(KeyCode.RightArrow)) eye -= sideDir * speed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.LeftArrow)) eye += sideDir * speed * Time.deltaTime;
+
+
+		// 4. Sincronización Final
+		target = eye + dir;
+	}
+	
     void CalcularPosicionOrbital()
     {
         float rY = yaw * Mathf.Deg2Rad, rP = pitch * Mathf.Deg2Rad;
