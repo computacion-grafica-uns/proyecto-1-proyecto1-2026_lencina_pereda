@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objetosEscena: []
   texInodoro: {fileID: 2800000, guid: 9a8e9f2e3e00e184ebca3ea7d9b53d80, type: 3}
-  texBacha: {fileID: 2800000, guid: 8a70f0436ff3d904e9783fbe041734ab, type: 3}
+  texBacha: {fileID: 2800000, guid: 753405979e8f080468aef6f4bfd84bd1, type: 3}
   texEspejo: {fileID: 2800000, guid: 8f62849a96673c04e855d67f94c0c16d, type: 3}
   texDucha: {fileID: 2800000, guid: 8c66fa0d978df5948b8a1efb64f23dd2, type: 3}
   texHeladera: {fileID: 2800000, guid: 6d5c6323a02f1cb46a6c2e758a4872ed, type: 3}
