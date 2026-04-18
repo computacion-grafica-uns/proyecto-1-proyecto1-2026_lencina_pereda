@@ -70,13 +70,13 @@ public class SceneManager : MonoBehaviour
 
         // --- 2. MUEBLES DEL BAÑO ---
         GameObject shower = BuildFromPath("Ducha", bathPath + "shower/shower.obj", Color.white, texDucha);
-        if (shower != null) AplicarTransformacion(shower, new Vector3(2f, 1.1f, 2.0f), Vector3.zero, Vector3.one);
+        if (shower != null) AplicarTransformacion(shower, new Vector3(2f, 1.15f, 2.0f), Vector3.zero, Vector3.one);
 
         GameObject toilet = BuildFromPath("Inodoro", bathPath + "toilet/toilet1/toilet1.obj", Color.white, texInodoro);
-        if (toilet != null) AplicarTransformacion(toilet, new Vector3(2.8f, 0.85f, 0.5f), new Vector3(0, 180f * Mathf.Deg2Rad, 0), Vector3.one);
+        if (toilet != null) AplicarTransformacion(toilet, new Vector3(2.8f, 0.6f, 0.5f), new Vector3(0, 180f * Mathf.Deg2Rad, 0), Vector3.one);
 
         GameObject sink = BuildFromPath("Lavamanos", bathPath + "sink/sink.obj", Color.white, texBacha);
-        if (sink != null) AplicarTransformacion(sink, new Vector3(2.1f, 0.9f, -2.1f), new Vector3(0, -rot90, 0), Vector3.one);
+        if (sink != null) AplicarTransformacion(sink, new Vector3(2.1f, 0.7f, -2.1f), new Vector3(0, -rot90, 0), Vector3.one);
 
         GameObject mirror = BuildFromPath("Espejo", bathPath + "mirror/mirror.obj", Color.white, texEspejo);
         if (mirror != null) AplicarTransformacion(mirror, new Vector3(2.1f, 1.7f, -2.48f), new Vector3(0, -rot90, 0), new Vector3(0.5f, 0.5f, 0.5f));
@@ -87,23 +87,23 @@ public class SceneManager : MonoBehaviour
 
 		// Heladera
 		GameObject fridge = BuildFromPath("Heladera", kitchenPath + "Fridge/Fridge.obj", Color.white, texHeladera);
-		if (fridge != null) AplicarTransformacion(fridge, new Vector3(-3f, 1.0f, 2.0f), new Vector3(0, rot90, 0), Vector3.one);
+		if (fridge != null) AplicarTransformacion(fridge, new Vector3(-3f, 1.05f, 2.0f), new Vector3(0, rot90, 0), Vector3.one);
 
 		// Cocina con Horno
 		GameObject stove = BuildFromPath("Cocina", cabinetsPath + "KitchenStoveWithOven/KitchenStoveWithOven.obj", Color.white, texCocina);
-		if (stove != null) AplicarTransformacion(stove, new Vector3(-3f, 0.85f, 1.0f), new Vector3(0, rot90, 0), Vector3.one);
+		if (stove != null) AplicarTransformacion(stove, new Vector3(-3f, 0.62f, 1.0f), new Vector3(0, rot90, 0), Vector3.one);
 
 		// Bajo Mesada
 		GameObject cabinet = BuildFromPath("BajoMesada", cabinetsPath + "KitchenCabinet1/KitchenCabinet1.obj", Color.white, texBajoMesada);
-		if (cabinet != null) AplicarTransformacion(cabinet, new Vector3(-3f, 0.85f, 0.1f), new Vector3(0, rot90, 0), Vector3.one);
+		if (cabinet != null) AplicarTransformacion(cabinet, new Vector3(-3f, 0.62f, 0.1f), new Vector3(0, rot90, 0), Vector3.one);
 
 		// Bajo Mesada con Bacha
 		GameObject sinkKitchen = BuildFromPath("BachaCocina", cabinetsPath + "KithcenCabinet1WithSink/KitchenCabinet1WithSink.obj", Color.white, texBachaCocina);
-		if (sinkKitchen != null) AplicarTransformacion(sinkKitchen, new Vector3(-3f, 0.85f, -0.8f), new Vector3(0, rot90, 0), Vector3.one);
+		if (sinkKitchen != null) AplicarTransformacion(sinkKitchen, new Vector3(-3f, 0.62f, -0.8f), new Vector3(0, rot90, 0), Vector3.one);
 
 		// Alacenas
 		GameObject upperCab = BuildFromPath("Alacena", cabinetsPath + "UpperCabinet/UpperCabinet.obj", Color.white, texAlacena);
-		if (upperCab != null) AplicarTransformacion(upperCab, new Vector3(-3f, 1.5f, 0.1f), new Vector3(0, rot90, 0), Vector3.one);
+		if (upperCab != null) AplicarTransformacion(upperCab, new Vector3(-3f, 1.05f, 0.1f), new Vector3(0, rot90, 0), Vector3.one);
 		
 		// --- 4. SECTOR HABITACIÓN ---
 		string bedroomPath = Application.dataPath + "/Models/bed/";
@@ -111,7 +111,7 @@ public class SceneManager : MonoBehaviour
 		GameObject bed = BuildFromPath("Cama", bedroomPath + "bed.obj", Color.white, texCama);
 		if (bed != null)
 		{
-			AplicarTransformacion(bed, new Vector3(-0.5f, 0.8f, 1.94f), new Vector3(0, 90f * Mathf.Deg2Rad, 0), Vector3.one);
+			AplicarTransformacion(bed, new Vector3(-0.5f, 0.62f, 1.92f), new Vector3(0, 90f * Mathf.Deg2Rad, 0), Vector3.one);
 		}		
 		
 		// --- 5. MUEBLES ADICIONALES (Distribución Optimizada) ---
@@ -121,14 +121,14 @@ public class SceneManager : MonoBehaviour
 		GameObject wardrobe = BuildFromPath("Placard", furniturePath + "HalfWardrobe/HalfWardrobe.obj", Color.white, texPlacard);
 		if (wardrobe != null)
 		{
-			AplicarTransformacion(wardrobe, new Vector3(0.5f, 0.8f, -2f), new Vector3(0, -90f * Mathf.Deg2Rad, 0), Vector3.one);
+			AplicarTransformacion(wardrobe, new Vector3(0.5f, 0.7f, -2f), new Vector3(0, -90f * Mathf.Deg2Rad, 0), Vector3.one);
 		}
 
 		// Mueble pequeño (littleOne): A los pies de la cama, contra la pared del baño
 		GameObject tiny = BuildFromPath("Mesita", furniturePath + "littleOne/littleOne.obj", Color.white, texMesita);
 		if (tiny != null)
 		{
-			AplicarTransformacion(tiny, new Vector3(1.1f, 0.5f, 2f), new Vector3(0, -90f * Mathf.Deg2Rad, 0), Vector3.one);
+			AplicarTransformacion(tiny, new Vector3(1.1f, 0.62f, 2f), new Vector3(0, -90f * Mathf.Deg2Rad, 0), Vector3.one);
 		}
 		
 		// --- 6. SECTOR COMEDOR ---
@@ -136,7 +136,7 @@ public class SceneManager : MonoBehaviour
 		string chairPath = Application.dataPath + "/Models/chair1/";
 
 		// --- SECTOR COMEDOR ---
-		Vector3 tablePos = new Vector3(-1f, 0.85f, -0.5f); 
+		Vector3 tablePos = new Vector3(-1f, 0.62f, -0.5f); 
 
 		// Carga de la mesa
 		GameObject diningTable = BuildFromPath("Mesa", tablePath + "table.obj", Color.white, texMesa);
@@ -151,16 +151,16 @@ public class SceneManager : MonoBehaviour
 
 		// Posiciones calculadas alrededor de tablePos
 		Vector3[] relativeChairPos = new Vector3[] {
-			new Vector3(tablePos.x, tablePos.y, tablePos.z + chairOffset), // Norte
-			new Vector3(tablePos.x, tablePos.y, tablePos.z - chairOffset), // Sur
-			new Vector3(tablePos.x + chairOffset, tablePos.y, tablePos.z), // Este
-			new Vector3(tablePos.x - chairOffset, tablePos.y, tablePos.z)  // Oeste
+			new Vector3(tablePos.x, tablePos.y + 0.08f, tablePos.z + chairOffset), // Norte
+			new Vector3(tablePos.x, tablePos.y + 0.08f, tablePos.z - chairOffset), // Sur
+			new Vector3(tablePos.x + chairOffset, tablePos.y + 0.08f, tablePos.z), // Este
+			new Vector3(tablePos.x - chairOffset, tablePos.y + 0.08f, tablePos.z)  // Oeste
 		};
 
 		// Rotaciones para que miren al centro (ajustadas para 'chair1.obj')
 		float[] chairRotRads = new float[] {
-			-90f * Mathf.Deg2Rad,  // Silla Norte
-			90f * Mathf.Deg2Rad, // Silla Sur
+			90f * Mathf.Deg2Rad,  // Silla Norte
+			-90f * Mathf.Deg2Rad, // Silla Sur
 			180f * Mathf.Deg2Rad, // Silla Este
 			0f                    // Silla Oeste
 		};
