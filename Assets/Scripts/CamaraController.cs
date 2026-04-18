@@ -111,10 +111,10 @@ public class CamaraController : MonoBehaviour
         else
         {
             // Manual
-            yaw -= Input.GetAxis("Mouse X") * 5f; 
+            yaw += Input.GetAxis("Mouse X") * 5f; 
             pitch += Input.GetAxis("Mouse Y") * 5f; 
-            if (Input.GetKey(KeyCode.LeftArrow)) yaw += 60f * Time.deltaTime;
-            if (Input.GetKey(KeyCode.RightArrow)) yaw -= 60f * Time.deltaTime;
+            if (Input.GetKey(KeyCode.LeftArrow)) yaw -= 60f * Time.deltaTime;
+            if (Input.GetKey(KeyCode.RightArrow)) yaw += 60f * Time.deltaTime;
         }
 
         pitch = Mathf.Clamp(pitch, -89f, 89f);
@@ -133,8 +133,8 @@ public class CamaraController : MonoBehaviour
 
 		// 2. FUNCIONALIDAD WASD (Nuevas)
 		// A y D: Rotación horizontal (Gira la "cabeza" sin mover el cuerpo)
-		if (Input.GetKey(KeyCode.D)) yaw -= rotationSpeed * Time.deltaTime;
-		if (Input.GetKey(KeyCode.A)) yaw += rotationSpeed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.D)) yaw += rotationSpeed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.A)) yaw -= rotationSpeed * Time.deltaTime;
 
 		// Recalculamos el vector 'dir' con el yaw actualizado (por mouse o por A/D)
 		Vector3 dir = new Vector3(
@@ -155,8 +155,8 @@ public class CamaraController : MonoBehaviour
 
 		// Flechas Derecha/Izquierda: Desplazamiento lateral (Strafe)
 		Vector3 sideDir = Vector3.Cross(Vector3.up, dir).normalized;
-		if (Input.GetKey(KeyCode.RightArrow)) eye -= sideDir * speed * Time.deltaTime;
-		if (Input.GetKey(KeyCode.LeftArrow)) eye += sideDir * speed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.RightArrow)) eye += sideDir * speed * Time.deltaTime;
+		if (Input.GetKey(KeyCode.LeftArrow)) eye -= sideDir * speed * Time.deltaTime;
 
 
 		// 4. Sincronización Final

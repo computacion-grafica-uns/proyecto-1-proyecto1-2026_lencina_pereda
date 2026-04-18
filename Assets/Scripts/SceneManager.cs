@@ -73,10 +73,10 @@ public class SceneManager : MonoBehaviour
         if (shower != null) AplicarTransformacion(shower, new Vector3(2f, 1.1f, 2.0f), Vector3.zero, Vector3.one);
 
         GameObject toilet = BuildFromPath("Inodoro", bathPath + "toilet/toilet1/toilet1.obj", Color.white, texInodoro);
-        if (toilet != null) AplicarTransformacion(toilet, new Vector3(3f, 0.85f, 0.5f), new Vector3(0, 180f * Mathf.Deg2Rad, 0), Vector3.one);
+        if (toilet != null) AplicarTransformacion(toilet, new Vector3(2.8f, 0.85f, 0.5f), new Vector3(0, 180f * Mathf.Deg2Rad, 0), Vector3.one);
 
         GameObject sink = BuildFromPath("Lavamanos", bathPath + "sink/sink.obj", Color.white, texBacha);
-        if (sink != null) AplicarTransformacion(sink, new Vector3(2.1f, 0.9f, -2.2f), new Vector3(0, -rot90, 0), Vector3.one);
+        if (sink != null) AplicarTransformacion(sink, new Vector3(2.1f, 0.9f, -2.1f), new Vector3(0, -rot90, 0), Vector3.one);
 
         GameObject mirror = BuildFromPath("Espejo", bathPath + "mirror/mirror.obj", Color.white, texEspejo);
         if (mirror != null) AplicarTransformacion(mirror, new Vector3(2.1f, 1.7f, -2.48f), new Vector3(0, -rot90, 0), new Vector3(0.5f, 0.5f, 0.5f));
