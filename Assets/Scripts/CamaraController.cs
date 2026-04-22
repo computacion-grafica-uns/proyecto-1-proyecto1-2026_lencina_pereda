@@ -127,7 +127,7 @@ public class CamaraController : MonoBehaviour
 		float rotationSpeed = 60f; // Sensibilidad de rotación para A y D
 
 		// 1. Mirada con Mouse (Se mantiene igual)
-		yaw -= Input.GetAxis("Mouse X") * 3f;
+		yaw += Input.GetAxis("Mouse X") * 3f;
 		pitch += Input.GetAxis("Mouse Y") * 3f;
 		pitch = Mathf.Clamp(pitch, -89f, 89f);
 
